@@ -42,7 +42,7 @@ class SelectImage extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(6),
                                       ),
                                     ),
-                                    child: Text(
+                                    child: const Text(
                                       'Profile Photo',
                                       style: TextStyle(color: whiteColor),
                                     ),
@@ -58,7 +58,7 @@ class SelectImage extends StatelessWidget {
   {
    await showDialog(context: context, builder: (BuildContext context)
    {
-    return AlertDialog( title: Center(child: Text("Select Image From")),content: SingleChildScrollView(
+    return AlertDialog( title: const Center(child: Text("Select Image From")),content: SingleChildScrollView(
       child: Row(
        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children:<Widget> [
@@ -68,36 +68,6 @@ class SelectImage extends StatelessWidget {
           },  icon: Icon(Icons.camera_alt,color: mainColor),
                   label: Text("Camera",style: TextStyle(color: mainColor),),),
        
-
-          // ElevatedButton.icon(
-          //       style:  ButtonStyle(
-          //           backgroundColor:
-          //               MaterialStatePropertyAll(mainColor)),
-          //       icon: const Icon(
-          //         cameraIcon,
-          //       ),
-          //       onPressed: ()
-          //       {Navigator.pop(context);
-          //     takeImage(ImageSource.camera);
-
-          //       },
-          //       label: const Text('Capture Image',style: TextStyle(fontSize: 15),),
-          //     ),
-          // GestureDetector(
-          //   child: Text("Camera"),
-          //   onTap: () {
-          //     Navigator.pop(context);
-          //     takeImage(ImageSource.camera);
-          //   },
-          // ),
-        //  SizedBox(width: 20,),
-          //  GestureDetector(
-          //     child: Text('Gallery'),
-          //     onTap: () {
-          //       Navigator.pop(context);
-          //       takeImage(ImageSource.gallery);
-          //     },
-          //   ),
           TextButton.icon(onPressed: ()
           {
             Navigator.pop(context);

@@ -96,7 +96,7 @@ class RoleBloc extends Bloc<RoleEvent, RoleState> {
       print('Token: $token');
       print('Site ID in RoleBloc: $siteId');
 
-      if (token == null || siteId == 0) {
+      if (token == null || siteId == null) {
         emit(state.copyWith(status: RoleStatus.failure));
         return;
       }
@@ -108,7 +108,7 @@ class RoleBloc extends Bloc<RoleEvent, RoleState> {
 
       emit(state.copyWith(status: RoleStatus.success, rolelist: result));
     } catch (e) {
-      print('Failed to fetch role data: $e');
+      print('Failed to fetch the data: $e');
       emit(state.copyWith(status: RoleStatus.failure));
     }
   }

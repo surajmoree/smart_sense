@@ -1,3 +1,5 @@
+import 'package:http/http.dart'as http;
+
 import '../network/api/user_api.dart';
 import 'repository.dart';
 
@@ -10,9 +12,18 @@ class AuthenticationRepo extends Repository {
     return await userApi.logout(token);
   }
 
-  Future<dynamic> userChangePassword(jsonData) async
+  // Future<dynamic> userChangePassword(jsonData) async
+  // {
+  //   return await userApi.userChangePassword(jsonData);
+  // }
+
+  
+
+  Future<dynamic> userChangePassword(Map<String, String> fields, List<http.MultipartFile> files) async
   {
-    return await userApi.userChangePassword(jsonData);
+    return await userApi.userChangePassword(fields,files);
   }
+
+  
 
 }

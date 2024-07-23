@@ -41,7 +41,5 @@ class ErrorUpdate extends ChangePasswordEvent {
 
 class UpdateForm extends ChangePasswordEvent {
    final String id;
-
-  UpdateForm({required this.id});
-
+   const UpdateForm({required this.id});
 }

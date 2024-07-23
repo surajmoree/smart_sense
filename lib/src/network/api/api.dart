@@ -60,36 +60,89 @@ class Api {
     }
   }
 
-    Future<Map> requestPUT(
-      {required String? path,dynamic parameters}) async {
-    bool chk = parameters!.containsKey("token");
+    Future<Map> requestPUT({
+  required String? path,
+  required Map<String, dynamic> fields,
+  required List<http.MultipartFile> files,
+}) async {
+  bool chk = fields.containsKey("token");
+  var headersData = _headers;
+
+  if (chk) {
+    headersData['Authorization'] = 'Bearer ${fields['token']}';
+  }
+
+  Uri uri;
+  if (_protocol == 'https') {
+    uri = Uri.https(_host, path!);
+  } else {
+    uri = Uri.http(_host, path!);
+  }
+
+  var request = http.MultipartRequest('PUT', uri);
+  request.headers.addAll(headersData);
+
+  // Adding fields
+  fields.forEach((key, value) {
+    request.fields[key] = value;
+  });
+
+  // Adding files
+  request.files.addAll(files);
+
+  // Sending request
+  final streamedResponse = await request.send();
+  final response = await http.Response.fromStream(streamedResponse);
+
+  if (response.body.isNotEmpty) {
+    final jsonObject = json.decode(response.body);
+    return jsonObject;
+  } else {
+    return {'status': 'failure', 'message': 'empty response from server'};
+  }
+}
+
+
+
+
+   Future<Map> requestPUTPass({
+    required String? path,
+    required Map<String, String> fields,
+    required List<http.MultipartFile> files,
+  }) async {
+    bool chk = fields.containsKey("token");
     var headersData = _headers;
-   //  dynamic res = jsonEncode(parameters);
-     dynamic res = jsonEncode(parameters);
     if (chk) {
-      headersData['Authorization'] = 'Bearer ${parameters['token']}';
-      // if (parameters.containsKey('token-type')) {
-      //   headersData['token-type'] = parameters['token-type'].toString();
-      // }
+      headersData['Authorization'] = 'Bearer ${fields['token']}';
     }
-    dynamic uri;
+
+    Uri uri;
     if (_protocol == 'https') {
       uri = Uri.https(_host, path!);
     } else {
       uri = Uri.http(_host, path!);
     }
-    // ignore: avoid_print
-    final results =
-        await http.put(uri, headers: headersData, body: res);
-    print("fron api------------${results.body}");
 
-    if (results.body.isNotEmpty) {
-      final jsonObject = json.decode(results.body);
-      // TO DO: Try to validate the code and remve if not needed
-      // if (jsonObject['status'] == 'expired') box.erase();
+    var request = http.MultipartRequest('PUT', uri);
+    request.headers.addAll(headersData);
+
+    // Adding fields
+    fields.forEach((key, value) {
+      request.fields[key] = value;
+    });
+
+    // Adding files
+    request.files.addAll(files);
+
+    // Sending request
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+
+    if (response.body.isNotEmpty) {
+      final jsonObject = json.decode(response.body);
       return jsonObject;
     } else {
-      return {};
+      return {'status':'failure','message': 'empty response from server'};
     }
   }
 
@@ -101,4 +154,6 @@ class Api {
         'Accept': 'application/json, text/plain',
         "Content-Type": "application/json"
       };
+
+ 
 }

@@ -1,3 +1,4 @@
+import 'package:http/http.dart'as http;
 import 'package:smart_sense/src/models/role_model.dart';
 import 'package:smart_sense/src/models/staff_device_model.dart';
 import 'package:smart_sense/src/models/staff_room_model.dart';
@@ -42,9 +43,9 @@ class StaffDataRepository extends Repository {
     return staffDataApi.editStaffData(jsondata);
   }
 
-  Future<dynamic> updateStaffData(jsonData,String id) async
+  Future<dynamic> updateStaffData(Map<String,dynamic>fields, List<http.MultipartFile>files) async
   {
-    return staffDataApi.updateStaffData(jsonData, id);
+    return staffDataApi.updateStaffData(fields,files);
   }
 
 }

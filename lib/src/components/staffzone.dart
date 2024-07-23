@@ -10,7 +10,7 @@ class StaffZone extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final siteIdNotifier = Provider.of<SiteIdNotifier>(context);
-    final staffZoneBloc = BlocProvider.of<StaffZoneBloc>(context);
+   // final staffZoneBloc = BlocProvider.of<StaffZoneBloc>(context);
 
     //  return Text('zone area');
 

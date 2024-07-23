@@ -1,5 +1,8 @@
 // ignore_for_file: avoid_print, use_rethrow_when_possible
 
+import 'dart:async';
+
+import 'package:http/http.dart'as http;
 import 'package:smart_sense/config.dart';
 import 'package:smart_sense/src/network/api/api.dart';
 
@@ -16,7 +19,20 @@ class UserApi extends Api {
       print(_);
     }
   }
+  
+  Future<dynamic> userChangePassword(Map<String,String>fields,List<http.MultipartFile>files)async{
+    final String? id = await storage.read(key: 'id');
+    try{
+      final userData = await requestPUTPass(path: '/api/v1/update_password/$id',fields:fields,files: files );
+        print('============== Response Data: $userData');
+        return userData;
+    }catch (e, _) {
+      print(e);
+      print(_);
+    }
+  }
 
+/*
  Future<dynamic> userChangePassword(jsonData) async
  {
   final String? id = await storage.read(key: 'id');
@@ -30,6 +46,8 @@ class UserApi extends Api {
     }
   
  }
+*/
+
 /*
   Future<dynamic> userChangePassword(dynamic jsonData) async {
     final String? id = await storage.read(key: 'id');

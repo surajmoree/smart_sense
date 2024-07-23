@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:smart_sense/src/components/app/app_layout/main_layout.dart';
 import 'package:smart_sense/src/config/constant/app_colors.dart';
@@ -10,6 +11,7 @@ import 'package:smart_sense/src/config/constant/app_colors.dart';
 import '../../../components/form_field_title.dart';
 import '../../../components/profileimage.dart';
 import '../bloc/staffeditprofile/bloc/edit_bloc_bloc.dart';
+import '../bloc/staffeditprofile/bloc/edit_bloc_event.dart';
 
 /*
 
@@ -325,13 +327,15 @@ class StaffProfileData extends StatefulWidget {
 }
 
 class _StaffProfileDataState extends State<StaffProfileData> {
+  final TextEditingController _customer_id = TextEditingController();
   final TextEditingController _firstName = TextEditingController();
+  final TextEditingController _fullName = TextEditingController();
   final TextEditingController _lastName = TextEditingController();
   final TextEditingController _email = TextEditingController();
   final TextEditingController _roleName = TextEditingController();
-  bool _nameValidate= false;
-  bool _lastNamee = false;
- 
+  final TextEditingController _id = TextEditingController();
+  final TextEditingController _middle_Name = TextEditingController();
+  final TextEditingController _role_Id = TextEditingController();
 
   String _userImage = "";
   File profileImage = File('');
@@ -347,7 +351,6 @@ class _StaffProfileDataState extends State<StaffProfileData> {
       _email.text = state.listdata?.staffData.email ?? '';
       _roleName.text = state.listdata?.staffData.roleName ?? '';
       _userImage = state.listdata?.staffImage.logo ?? '';
-     
     });
   }
 
@@ -390,9 +393,10 @@ class _StaffProfileDataState extends State<StaffProfileData> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    FormFieldTitle(title: "Profile Details:"),
+                    const FormFieldTitle(title: "Profile details:"),
                     Card(
-                      margin: EdgeInsets.only(left: 13, right: 13, top: 10),
+                      margin:
+                          const EdgeInsets.only(left: 13, right: 13, top: 10),
                       child: Padding(
                         padding: const EdgeInsets.only(
                             left: 15, top: 15, right: 15, bottom: 10),
@@ -403,7 +407,7 @@ class _StaffProfileDataState extends State<StaffProfileData> {
                               takeImage: takeImage,
                               existedImageUrl: _userImage,
                             ),
-                            Align(
+                            const Align(
                               alignment: Alignment.topLeft,
                               child: Row(
                                 children: [
@@ -419,7 +423,7 @@ class _StaffProfileDataState extends State<StaffProfileData> {
                               ),
                             ),
                             const SizedBox(height: 5),
-                            Container(
+                            SizedBox(
                               height: 55,
                               child: TextFormField(
                                 controller: _firstName,
@@ -445,7 +449,7 @@ class _StaffProfileDataState extends State<StaffProfileData> {
                                 ),
                               ),
                             ),
-                            Align(
+                            const Align(
                               alignment: Alignment.topLeft,
                               child: Row(
                                 children: [
@@ -461,7 +465,7 @@ class _StaffProfileDataState extends State<StaffProfileData> {
                               ),
                             ),
                             const SizedBox(height: 5),
-                            Container(
+                            SizedBox(
                               height: 55,
                               child: TextFormField(
                                 controller: _lastName,
@@ -487,7 +491,7 @@ class _StaffProfileDataState extends State<StaffProfileData> {
                                 ),
                               ),
                             ),
-                            Align(
+                            const Align(
                               alignment: Alignment.topLeft,
                               child: Row(
                                 children: [
@@ -503,7 +507,7 @@ class _StaffProfileDataState extends State<StaffProfileData> {
                               ),
                             ),
                             const SizedBox(height: 5),
-                            Container(
+                            SizedBox(
                               height: 55,
                               child: TextFormField(
                                 readOnly: true,
@@ -530,12 +534,12 @@ class _StaffProfileDataState extends State<StaffProfileData> {
                                 ),
                               ),
                             ),
-                            Align(
+                            const Align(
                               alignment: Alignment.topLeft,
                               child: Row(
                                 children: [
                                   Text(
-                                    "Role Type:",
+                                    "Role type:",
                                     style: TextStyle(
                                         fontSize: 15,
                                         color: blackColor,
@@ -546,7 +550,7 @@ class _StaffProfileDataState extends State<StaffProfileData> {
                               ),
                             ),
                             const SizedBox(height: 5),
-                            Container(
+                            SizedBox(
                               height: 55,
                               child: TextFormField(
                                 readOnly: true,
@@ -572,57 +576,90 @@ class _StaffProfileDataState extends State<StaffProfileData> {
                                 ),
                               ),
                             ),
-
                             const SizedBox(
-                          height: 15,
-                        ),
-                        Container(
-                          width: 150,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(6),
-                            color: mainColor,
-                          ),
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              setState(() {
-                                _nameValidate =  state.listdata!.staffData.firstName.isEmpty;
-                                _lastNamee = state.listdata!.staffData.lastName.isEmpty;
-                              });
-                              if(_formKey.currentState!.validate() && !_nameValidate && !_lastNamee)
-                              {
-
-                                Map<String,dynamic>formData =  {
-                                  "first_name" : _firstName.text.toString(),
-                                  "last_name" : _lastName.text.toString(),
-                                  "email" : _email.text.toString(),
-                                  "role_name" : _roleName.text.toString(),
-                                };
-                                  print("================formdata$formData");
-                                  context.read<EditBloc>().add(UpdateStaffData(
-                                    id: state.listdata!.staffData.id.toString(),
-                                    formData: formData,
-                                    ));
-                              }
-                            
-                              // final String? id =
-                              //     await storage.read(key: 'id');
-                              // context
-                              //     .read<ChangePasswordBloc>()
-                              //     .add(UpdateForm(id: id.toString()));
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: mainColor,
-                              shape: RoundedRectangleBorder(
+                              height: 15,
+                            ),
+                            Container(
+                              width: 150,
+                              height: 40,
+                              decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(6),
+                                color: mainColor,
+                              ),
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  if (_formKey.currentState!.validate()) {
+                                    Map<String, String> fields = {
+                                      'first_name': _firstName.text,
+                                      'last_name': _lastName.text,
+                                      'email': _email.text,
+                                      'role_name': _roleName.text,
+                                    };
+                                    final List<http.MultipartFile> files = [];
+                                    // if (profileImage != null) {
+                                    //   print('file path ${profileImage!.path}');
+                                    //   final file = File(profileImage!.path);
+                                    //   print(
+                                    //       'File exists: ${file.existsSync()}');
+
+                                    //   if (file.existsSync()) {
+                                    //     final imageFile =
+                                    //         await http.MultipartFile.fromPath(
+                                    //       'image',
+                                    //       profileImage!.path,
+                                    //       contentType:
+                                    //           MediaType('image', 'jpeg'),
+                                    //     );
+                                    //     files.add(imageFile);
+                                    //   } else {
+                                    //     Fluttertoast.showToast(
+                                    //       msg: 'file does not exist',
+                                    //       backgroundColor: redColor,
+                                    //       toastLength: Toast.LENGTH_SHORT,
+                                    //     );
+                                    //     return;
+                                    //   }
+                                    // }
+
+                                    // ignore: use_build_context_synchronously
+                                    context.read<EditBloc>().add(
+                                        UpdateStaffData(
+                                            id: state.listdata!.staffData.id
+                                                .toString(),
+                                            formData: fields,
+                                            files: files, profileImage: profileImage));
+                                  }
+
+                                  // Map<String,String>formData =  {
+                                  //   "first_name" : _firstName.text.toString(),
+                                  //   "last_name" : _lastName.text.toString(),
+                                  //   "email" : _email.text.toString(),
+                                  //   "role_name" : _roleName.text.toString(),
+                                  // };
+                                  //   print("================formdata$formData");
+                                  //   context.read<EditBloc>().add(UpdateStaffData(
+                                  //     id: state.listdata!.staffData.id.toString(),
+                                  //     formData: formData,
+                                  //     ));
+
+                                  // final String? id =
+                                  //     await storage.read(key: 'id');
+                                  // context
+                                  //     .read<ChangePasswordBloc>()
+                                  //     .add(UpdateForm(id: id.toString()));
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: mainColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Update',
+                                  style: TextStyle(color: whiteColor),
+                                ),
                               ),
                             ),
-                            child: Text(
-                              'Update',
-                              style: TextStyle(color: whiteColor),
-                            ),
-                          ),
-                        ),
                           ],
                         ),
                       ),

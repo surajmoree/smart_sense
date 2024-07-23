@@ -13,7 +13,7 @@ class  StaffRoom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
    final siteIdNotifier = Provider.of<SiteIdNotifier>(context);
-   final roomBloc  =  BlocProvider.of<RoomBloc>(context);
+  // final roomBloc  =  BlocProvider.of<RoomBloc>(context);
         //  return Text('zone area');
        
        return   BlocProvider(
@@ -52,7 +52,7 @@ class  StaffRoom extends StatelessWidget {
                                     itemBuilder: (context, index) {
                                       final zone = state.roomlist[index];
                                       return ListTile(
-                                        title: Text(zone.roomName ?? 'No zone name'),
+                                        title: Text(zone.roomName),
                                       
                                       );
                                     },

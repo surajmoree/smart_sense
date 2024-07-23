@@ -201,7 +201,7 @@ class LoginBloc extends Bloc<LoginBlocEvent, LoginState> {
         await siteIdNotifier.saveSiteId(siteId);
         storage.write(key: 'token', value: result['token']);
         print('this is token : ${result['token']}');
-        print('this is siteId : ${result['site_id']}');
+        print('this is siteid : ${result['site_id']}');
         emit(state.copyWith(status: FormzStatus.submissionSuccess));
       } else {
         emit(state.copyWith(

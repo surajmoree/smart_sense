@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print, use_rethrow_when_possible
 
+import 'package:http/http.dart' as http;
+import 'package:smart_sense/config.dart';
 import 'package:smart_sense/src/models/role_model.dart';
 import 'package:smart_sense/src/models/staff_device_model.dart';
 import 'package:smart_sense/src/models/staff_model.dart';
@@ -267,10 +269,9 @@ class StaffDataApi extends Api {
     try {
       final response = await requestGET(
           path: '/api/v1/get/user/${jsonData['id']}', parameters: jsonData);
-    //  await storage.write(key: 'id', value: jsonData['id'].toString());
+      //  await storage.write(key: 'id', value: jsonData['id'].toString());
 
       print('==============editdata $response');
-     
 
       if (response.containsKey('users')) {
         return ApiResponse.fromJson(response);
@@ -283,18 +284,19 @@ class StaffDataApi extends Api {
     }
   }
 
-
-  Future<dynamic> updateStaffData(jsonData, String id)async
-  {
-    try{
-      final result  = await requestPUT(path: '/api/v1/update_user_profile/$id',parameters: jsonData);
+    Future<dynamic> updateStaffData(Map<String, dynamic> fields, List<http.MultipartFile> files) async {
+    final String? id = await storage.read(key: 'id');
+    try {
+      final result = await requestPUT(
+        path: '/api/v1/update_user_profile/$id',
+        fields: fields,
+        files: files,
+      );
       return result;
-    }
-    catch (er) {
-      print("Error is---------$er");
+    } catch (e, _) {
+      print(e);
+      print(_);
+      return {'status': 'failure', 'message': 'update failed'};
     }
   }
-
-
-
 }

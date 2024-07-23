@@ -1,5 +1,8 @@
-part of 'edit_bloc_bloc.dart';
 
+import 'dart:io';
+
+import 'package:equatable/equatable.dart';
+import 'package:http/http.dart'as http;
 class EditEvent extends Equatable {
   const EditEvent();
 
@@ -17,6 +20,10 @@ class UpdateStaffData extends EditEvent
 {
   final Map<String, dynamic>? formData;
   final String id;
+  final List<http.MultipartFile> files;
+  final File profileImage;
 
-  const UpdateStaffData({ this.formData, required this.id});
+  const UpdateStaffData( {   this.formData, required  this.profileImage, 
+    required this.id,required this.files,
+  });
 }

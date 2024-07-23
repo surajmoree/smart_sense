@@ -223,7 +223,7 @@ class _ChangepasswordState extends State<Changepassword> {
         if (state.status.isSubmissionSuccess) {
           Fluttertoast.cancel();
           Fluttertoast.showToast(
-            msg: "Password Changed Successfully",
+            msg: "Password changes successfully",
             backgroundColor: mainColor,
             toastLength: Toast.LENGTH_SHORT,
           );
@@ -238,13 +238,15 @@ class _ChangepasswordState extends State<Changepassword> {
           );
         }
         if (state.status.isSubmissionFailure) {
-          Fluttertoast.showToast(
-            msg: "Password Change Failed",
-            backgroundColor: redColor,
-            toastLength: Toast.LENGTH_SHORT,
-          );
-        }
+        print('Submission failed: ${state.errorMessage}');
+        Fluttertoast.showToast(
+          msg: "Password change failed: ${state.errorMessage}",
+          backgroundColor: redColor,
+          toastLength: Toast.LENGTH_SHORT,
+        );
+      }
       },
+      // ignore: deprecated_member_use
       child: WillPopScope(
         onWillPop: () async {
           return true;
@@ -259,12 +261,13 @@ class _ChangepasswordState extends State<Changepassword> {
                     padding: const EdgeInsets.only(
                       left: 15, top: 15, right: 15, bottom: 10,
                     ),
-                    child: Column(
+                    child: 
+                    Column(
                       children: [
-                        Align(
+                        const Align(
                           alignment: Alignment.topLeft,
                           child: Row(
-                            children: const [
+                            children: [
                               Text(
                                 "New Password:",
                                 style: TextStyle(
@@ -278,7 +281,9 @@ class _ChangepasswordState extends State<Changepassword> {
                           ),
                         ),
                         const SizedBox(height: 5),
-                        Container(
+                        BlocBuilder<ChangePasswordBloc, ChangePasswordState>(builder: (context,state)
+                        {
+                          return SizedBox(
                           height: 55,
                           child: TextFormField(
                             controller: _passwordController,
@@ -288,8 +293,8 @@ class _ChangepasswordState extends State<Changepassword> {
                                 .add(PasswordUpdate(value));
                             },
                             keyboardType: TextInputType.text,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(
+                            decoration:  InputDecoration(
+                              border: const OutlineInputBorder(
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(10.0),
                                 ),
@@ -300,8 +305,9 @@ class _ChangepasswordState extends State<Changepassword> {
                               ),
                               filled: true,
                               fillColor: lightGreyColor,
-                              hintText: "Enter New Password",
-                              hintStyle: TextStyle(
+                              hintText: "Enter new password",
+                              errorText: state.password.invalid ? 'Please enter password': null,
+                              hintStyle: const TextStyle(
                                 color: hintTextColor,
                                 fontFamily: 'Mulish',
                                 fontWeight: FontWeight.w400,
@@ -309,14 +315,16 @@ class _ChangepasswordState extends State<Changepassword> {
                               ),
                             ),
                           ),
-                        ),
+                        );
+                        }),
+                        
                         const SizedBox(height: 15),
-                        Align(
+                        const Align(
                           alignment: Alignment.topLeft,
                           child: Row(
-                            children: const [
+                            children: [
                               Text(
-                                "Confirm Password:",
+                                "Confirm password:",
                                 style: TextStyle(
                                   fontSize: 15,
                                   color: blackColor,
@@ -328,7 +336,9 @@ class _ChangepasswordState extends State<Changepassword> {
                           ),
                         ),
                         const SizedBox(height: 5),
-                        Container(
+                        BlocBuilder<ChangePasswordBloc, ChangePasswordState>(builder: (context,state)
+                        {
+                          return   SizedBox(
                           height: 55,
                           child: TextFormField(
                             controller: _confPasswordController,
@@ -338,8 +348,8 @@ class _ChangepasswordState extends State<Changepassword> {
                                 .add(ConfirmPassUpdate(value));
                             },
                             keyboardType: TextInputType.text,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(
+                            decoration:  InputDecoration(
+                              border: const OutlineInputBorder(
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(10.0),
                                 ),
@@ -351,7 +361,8 @@ class _ChangepasswordState extends State<Changepassword> {
                               filled: true,
                               fillColor: lightGreyColor,
                               hintText: "Confirm Password",
-                              hintStyle: TextStyle(
+                              errorText: state.confPassword.invalid ? 'Please enter confirm password' : null,
+                              hintStyle: const TextStyle(
                                 color: hintTextColor,
                                 fontFamily: 'Mulish',
                                 fontWeight: FontWeight.w400,
@@ -359,7 +370,9 @@ class _ChangepasswordState extends State<Changepassword> {
                               ),
                             ),
                           ),
-                        ),
+                        );
+                        }),
+                      
                         const SizedBox(height: 15),
                         Container(
                           width: 150,
@@ -381,7 +394,7 @@ class _ChangepasswordState extends State<Changepassword> {
                                 borderRadius: BorderRadius.circular(6),
                               ),
                             ),
-                            child: Text(
+                            child: const Text(
                               'Submit',
                               style: TextStyle(color: whiteColor),
                             ),

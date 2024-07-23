@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:smart_sense/src/models/login_model.dart';
@@ -45,8 +47,7 @@ class ChangePasswordBloc
     emit(state.copyWith(errorMessage: event.error));
   }
 
-  Future<void> _submitForm(
-      UpdateForm event, Emitter<ChangePasswordState> emit) async {
+  Future<void> _submitForm(UpdateForm event, Emitter<ChangePasswordState> emit) async {
     if (state.status.isInvalid) {
       emit(state.copyWith(status: FormzStatus.submissionFailure));
       return;
@@ -59,38 +60,33 @@ class ChangePasswordBloc
       if (token == null) {
         throw Exception('Token is null');
       }
-      Map<String, Object> jsonData = {
-        "token": token.toString(),
-        "formData": {
-          "originalData":{
-           "password": state.password.value,
-          "confirm_password": state.confPassword.value
-          }
-      
-          
-        }
+
+      Map<String, String> formData = {
+        'formData': jsonEncode({
+          // 'originalData': {
+          //   'password': '',
+          //   'confirm_password': ''
+          // },
+          'password': state.password.value,
+          'confirm_password': state.confPassword.value,
+        }),
+        'token': token.toString()
       };
 
-     
-      // Map<String, String> formData = {
-      //   "password": state.password.value.toString(),
-      //   "confirm_password": state.confPassword.value.toString()
-      // };
-
-      //  Map<String, Object> jsonData = {"token": token.toString(), "formData": jsonEncode(formData)};
-
       // Log the JSON data
-      print("JSON Data to be sent: $jsonData");
+      print("JSON Data to be sent: $formData");
 
-      final result = await authenticationRepo.userChangePassword(jsonData);
+      final result = await authenticationRepo.userChangePassword(formData, []);
 
       // Log the response data
       print("Response from API: $result");
 
-      if (result != null && result['status'] == 'success') {
+      if (result != null && result['status'] == 'Success') {
         emit(state.copyWith(status: FormzStatus.submissionSuccess));
       } else {
-       emit(state.copyWith(status: FormzStatus.submissionFailure));
+        emit(state.copyWith(status: FormzStatus.submissionFailure,
+        errorMessage: result != null? result['message']:'Unknown error'
+        ));
       }
     } catch (e) {
       print("Error: $e");
@@ -98,4 +94,5 @@ class ChangePasswordBloc
           status: FormzStatus.submissionFailure, errorMessage: e.toString()));
     }
   }
+
 }

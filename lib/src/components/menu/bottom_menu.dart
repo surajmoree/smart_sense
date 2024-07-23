@@ -8,7 +8,7 @@ import '../../config/constant/app_icons.dart';
 List<String> bottomNavRoutes = ["/homepage", "/audio", "/message", "/morepage",];
 
 class BottomMenu extends StatelessWidget {
-  const BottomMenu({Key? key}) : super(key: key);
+  const BottomMenu({super.key});
 
   @override
   Widget build(BuildContext context) {

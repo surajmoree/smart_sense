@@ -7,6 +7,7 @@ import 'package:smart_sense/src/modules/homepage/homepage_bloc/bloc/home_page_bl
 import '../../config/constant/app_colors.dart';
 import '../../config/constant/app_icons.dart';
 import 'bloc/staffeditprofile/bloc/edit_bloc_bloc.dart';
+import 'bloc/staffeditprofile/bloc/edit_bloc_event.dart';
 import 'pages/changePassword.dart';
 import 'pages/staffEditProfile.dart';
 
@@ -55,20 +56,20 @@ class Profile extends StatelessWidget {
                     ),
                     BlocBuilder<HomePageBloc,HomePageState>(builder: (context,state)
                     {
-                     final StaffData = state.listStaff.first;
+                     final staffData = state.listStaff.first;
                       return    Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children:  [
                         Text(
-                          StaffData.customer_name.toString(),
-                          style: TextStyle(
+                          staffData.customer_name.toString(),
+                          style: const TextStyle(
                               color: blackColor,
                               fontSize: 15,
                               fontWeight: FontWeight.w500),
                         ),
-                        Text(StaffData.email.toString(),
-                            style: TextStyle(
+                        Text(staffData.email.toString(),
+                            style: const TextStyle(
                                 color: hintTextColor,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500))
@@ -90,8 +91,8 @@ class Profile extends StatelessWidget {
                     child: Column(
                       children: [
                         ListTile(
-                          leading: Padding(
-                            padding: const EdgeInsets.only(top: 2, right: 15),
+                          leading: const Padding(
+                            padding: EdgeInsets.only(top: 2, right: 15),
                             child: Icon(personIcon,size: 20,),
                           ),
                           title: Transform.translate(
@@ -116,7 +117,7 @@ class Profile extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>  StaffProfileData(),
+                      builder: (context) =>  const StaffProfileData(),
                     ),
                   );
                 } else {
@@ -134,8 +135,8 @@ class Profile extends StatelessWidget {
                           thickness: 4,
                         ),
                         ListTile(
-                          leading: Padding(
-                            padding: const EdgeInsets.only(top: 2, right: 15),
+                          leading: const Padding(
+                            padding: EdgeInsets.only(top: 2, right: 15),
                             child: Icon(personIcon,size: 20,),
                           ),
                           title: Transform.translate(

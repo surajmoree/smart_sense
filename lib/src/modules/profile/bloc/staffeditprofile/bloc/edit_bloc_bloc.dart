@@ -6,8 +6,8 @@ import 'package:smart_sense/config.dart';
 
 import '../../../../../models/staff_edit_profile.dart';
 import '../../../../../repositories/staff_data_repository.dart';
+import 'edit_bloc_event.dart';
 
-part 'edit_bloc_event.dart';
 part 'edit_bloc_state.dart';
 
 // class EditBloc extends Bloc<EditEvent, EditState> {
@@ -83,23 +83,37 @@ class EditBloc extends Bloc<EditEvent, EditState> {
       emit(state.copyWith(status: EditStatus.failure));
     }
   }
-
-  _onUpdateStaffData(UpdateStaffData event, Emitter<EditState> emit) async {
+   
+  
+   _onUpdateStaffData(UpdateStaffData event, Emitter<EditState> emit) async {
     emit(state.copyWith(status: EditStatus.updating));
     final token = await storage.read(key: 'token');
-    Map<String, Object> jsonData = {
+    // Ensure formData contains only encodable values
+    Map<String, Object> formData = { 
       "token": token.toString(),
       "formData": jsonEncode(event.formData),
     };
-    print('StaffData sent---------$jsonData');
-    dynamic result = await staffDataRepository.updateStaffData(jsonData, event.id.toString());
+    print('StaffData sent---------${formData}');
 
-    if (result['status'] == "Success") {
-      emit(state.copyWith(status: EditStatus.updated));
-      emit(state.copyWith(status: EditStatus.success));
-    } else {
+    try {
+      dynamic result = await staffDataRepository.updateStaffData(formData, event.files);
+
+      if (result['status'] == "Success") {
+        emit(state.copyWith(status: EditStatus.updated));
+        await Future.delayed(Duration(seconds: 1));
+        emit(state.copyWith(status: EditStatus.success));
+        if(event.profileImage.path.isNotEmpty)
+        {
+
+        }
+      } else {
+        emit(state.copyWith(status: EditStatus.failure));
+      }
+    } catch (e) {
+      print('Error in _onUpdateStaffData: $e');
       emit(state.copyWith(status: EditStatus.failure));
     }
   }
+
 
 }

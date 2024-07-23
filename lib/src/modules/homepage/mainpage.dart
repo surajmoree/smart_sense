@@ -80,6 +80,7 @@ class _HomepageState extends State<Homepage> with SingleTickerProviderStateMixin
                          //   print('Image URL: ${staffdata.userImg}');
                            storage.write(key: 'id', value: staffdata.id.toString());
                            storage.write(key: 'siteId', value: staffdata.site_id.toString());
+                           storage.write(key: 'img',value: staffdata.userImg);
                           return Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.center,

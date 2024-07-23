@@ -18,7 +18,7 @@ class FormFieldTitle extends StatelessWidget {
           alignment: Alignment.topLeft,
           child: Text(
             title,
-            style:  TextStyle(
+            style:  const TextStyle(
                 color: blackColor, fontSize: 18, fontWeight: FontWeight.w600),
           )),
     );

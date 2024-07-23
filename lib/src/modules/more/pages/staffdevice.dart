@@ -15,7 +15,7 @@ class StaffDevice extends StatelessWidget
   Widget build(BuildContext context)
   {
     final siteIdNotifier = Provider.of<SiteIdNotifier>(context);
-    final deviceBloc = BlocProvider.of<DeviceBloc>(context);
+  //  final deviceBloc = BlocProvider.of<DeviceBloc>(context);
 
   return  BlocProvider(create: (context)=> DeviceBloc()..add(FetchDataEvent(page: 1, siteId: siteIdNotifier.siteId??0)),
     child: Scaffold(

@@ -1,38 +1,3 @@
-
-// class ZoneModel {
-//   final int id;
-//   final int siteId;
-//   final String xMax;
-//   final String xMin;
-//   final String yMax;
-//   final String yMin;
-//   final String zoneName;
-
-//   ZoneModel({
-//     required this.id,
-//     required this.siteId,
-//     required this.xMax,
-//     required this.xMin,
-//     required this.yMax,
-//     required this.yMin,
-//     required this.zoneName,
-//   });
-
-//   factory ZoneModel.fromJson(Map<String, dynamic> json) {
-//     return ZoneModel(
-//       id: json['id'] ?? 0,
-//       siteId: json['site_id'] ?? 0,
-//       xMax: json['x_max'] ?? '',
-//       xMin: json['x_min'] ?? '',
-//       yMax: json['y_max'] ?? '',
-//       yMin: json['y_min'] ?? '',
-//       zoneName: json['zone_name'] ?? '',
-//     );
-//   }
-// }
-
-
-
 import 'package:equatable/equatable.dart';
 
 class ZoneModel extends Equatable{
