@@ -12,7 +12,7 @@ import 'package:smart_sense/src/network/controller/authentication_siteId.dart';
 import 'package:smart_sense/src/router/app_router.dart';
 import 'package:smart_sense/src/socket/bloc/socket_bloc.dart';
 import 'package:smart_sense/src/socket/socket_manager.dart';
-import 'package:timezone/data/latest.dart' as tz;
+import 'package:workmanager/workmanager.dart';
 
 import 'src/components/menu/bloc/menu_bloc.dart';
 import 'src/modules/homepage/zone_area_bloc/bloc/staff_zone_bloc_bloc.dart';
@@ -22,16 +22,12 @@ import 'src/modules/more/bloc/roombloc/bloc/room_bloc_bloc.dart';
 import 'src/modules/profile/bloc/staffeditprofile/bloc/edit_bloc_bloc.dart';
 import 'src/socket/bloc/socket_event.dart';
 
-
-
-
-
 // void main() async {
 //   WidgetsFlutterBinding.ensureInitialized();
 //   final auth = Authentication();
 //   final isLogin = await auth.checkLogin();
 //   final socketManager = SocketManager();
-//   socketManager.connectSocket(); 
+//   socketManager.connectSocket();
 
 //   runApp(
 //     ChangeNotifierProvider(
@@ -44,7 +40,6 @@ import 'src/socket/bloc/socket_event.dart';
 //     ),
 //   );
 // }
-
 
 // class MyApp extends StatelessWidget {
 //   final String? initialRoute;
@@ -92,20 +87,15 @@ import 'src/socket/bloc/socket_event.dart';
 //     );
 //   }
 // }
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-
- void main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  const AndroidInitializationSettings androidInitializationSettings = AndroidInitializationSettings('app_icon');
-  const  InitializationSettings initializationSettings = InitializationSettings(android: androidInitializationSettings);
-   tz.initializeTimeZones();
-   
-
+   await initializeService();// for initialize background service 
+   await initializeNotifications();//initialize  for getting notification
   final auth = Authentication();
   final isLogin = await auth.checkLogin();
-  final socketManager = SocketManager();
-  socketManager.connectSocket(); 
+  final socketManager = SocketManager(auth);
+  socketManager.connectSocket();
 
   runApp(
     ChangeNotifierProvider(
@@ -118,8 +108,49 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterL
     ),
   );
 }
+// callbackDispatcher function we create to handle task dispatched by workmManager
+// even if app is running at background or fully closed
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) async {
+    FlutterLocalNotificationsPlugin flip = FlutterLocalNotificationsPlugin();
+    var android = const AndroidInitializationSettings("@mipmap/ic_launcher");
+    var setting = InitializationSettings(android: android);
+    flip.initialize(setting);
+  final auth= Authentication();
+  await auth.checkLogin();
+    // Initialize the socket connection
+    final socketManager = SocketManager(auth);
+    socketManager.connectSocket();
 
+  
+    
 
+    // Listen for alert notifications and show notifications
+  
+       socketManager.onAlertNotification = (data) {
+        if(auth.loggedIn)
+        {
+          print('login status---------------${auth.loggedIn}');
+ _showNotificationWithDefaultSound(flip, 'Alert', 'You got an alert: ${data['message']}');
+        }
+     
+    };
+
+  
+   
+
+    return Future.value(true);
+  });
+}
+
+Future _showNotificationWithDefaultSound(FlutterLocalNotificationsPlugin flip, String title, String body) async {
+  var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+    'your_channel_id', 'your_channel_name',
+    importance: Importance.max, priority: Priority.high
+  );
+  var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
+  await flip.show(0, title, body, platformChannelSpecifics, payload: 'default_sound');
+}
 class MyApp extends StatelessWidget {
   final String? initialRoute;
   final AppRouter appRouter;
@@ -147,10 +178,10 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => SocketBloc(socketManager)..add(ConnectSocket()),
         ),
-         BlocProvider(create: (context) => RoomBloc()),
-         BlocProvider(create: (context) => DeviceBloc()),
-         BlocProvider(create: (context) => EditBloc()),
-         BlocProvider(create: (context) => ChangePasswordBloc()),
+        BlocProvider(create: (context) => RoomBloc()),
+        BlocProvider(create: (context) => DeviceBloc()),
+        BlocProvider(create: (context) => EditBloc()),
+        BlocProvider(create: (context) => ChangePasswordBloc()),
         //EditBloc
       ],
       child: MaterialApp(
@@ -166,5 +197,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-

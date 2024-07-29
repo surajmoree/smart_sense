@@ -241,7 +241,7 @@ class _HomepageState extends State<Homepage> with SingleTickerProviderStateMixin
         return AlertDialog(
           title: Text(isClicked ? 'Are you still attending?' : 'New Alert'),
           content: Text(
-            'Alert Type: ${data['alert_type']}\n'
+            'Alert Type: ${data['alert_type']} press\n'
             'Device: ${data['Device']}\n'
             'Mac: ${data['Mac']}\n'
             'Room: ${data['Room']}\n'
@@ -328,7 +328,7 @@ class _HomepageState extends State<Homepage> with SingleTickerProviderStateMixin
                     child: SizedBox.fromSize(
                       size: const Size.fromRadius(53),
                       child: Image.asset(
-                        'assets/images/male.jpg',
+                        'assets/images/person.png',
                         fit: BoxFit.cover,
                       ),
                     ),
